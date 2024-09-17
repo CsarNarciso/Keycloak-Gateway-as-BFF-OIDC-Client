@@ -1,0 +1,42 @@
+services:
+  keycloak:
+    build: .
+    ports:
+      - "8080:8080"
+    command: start-dev
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: letmein
+    networks:
+      - postgres-net
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres-net
+    volumes:
+      - postgres-vol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: letmein
+networks:
+  postgres-net:
+volumes:
+  postgres-vol:
