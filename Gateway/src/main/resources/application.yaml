@@ -1,0 +1,37 @@
+#Server
+server:
+  port: 8000
+#Application
+spring:
+  application:
+    name: Gateway
+  main:
+    web-application-type: reactive
+  #Gateway Routes
+  cloud:
+    gateway:
+      routes:
+        - id: resource
+          uri: http://localhost:8001/resource
+          predicates:
+            - Path=/resource
+          #Gateway Filters
+          filters:
+            - SaveSession
+            - TokenRelay=
+            - RemoveRequestHeader=Cookie
+  #OAuth2.0 Confidential Client
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            provider: test
+            client-id: resource-app
+            client-secret: 5o09GjNqjjt5DE8eqXK9zKawqOnIyPSV
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8000/login/oauth2/code/resource-app
+            scope: openid
+        provider:
+          test:
+            issuer-uri: http://localhost:8080/realms/test
