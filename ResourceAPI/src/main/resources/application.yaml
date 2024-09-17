@@ -1,0 +1,13 @@
+#Server
+server:
+  port: 8001
+#Application
+spring:
+  application:
+    name: ResourceAPI
+  #Oauth2.0 Resource Server
+  security:
+    oauth2:
+      resourceServer:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/test/protocol/openid-connect/certs
